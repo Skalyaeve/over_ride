@@ -1,3 +1,3 @@
 # Level 08
 
-- We login as user level8:
+- We login as user level08:

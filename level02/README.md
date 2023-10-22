@@ -1,3 +1,3 @@
 # Level 02
 
-- We login as user level2:
+- We login as user level02:
