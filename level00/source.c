@@ -12,9 +12,9 @@ int main(void)
         if (buffer != 0x149c) // 5276
         {
                 puts("\nInvalid Password!");
-                return 1;
+                return 0x1;
         }
         puts("\nAuthenticated!");
         system("/bin/sh");
-        return 0;
+        return 0x0;
 }

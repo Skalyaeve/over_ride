@@ -62,7 +62,7 @@ End of assembler dump.
 ```
 > `0x8048636: "%d"`
 
-> `<scanf>` est appelé avec un buffer de 4 octets alloué sur la stack (0x20 - 0x1c = 4). Le but ici est de convertir une entrée utilisateur en int.
+> `<scanf>` is called with a 4-byte buffer allocated on the stack (0x20 - 0x1c = 4). The goal here is to convert user input into an integer.
 
 ```
    0x080484e3 <+79>:    mov    0x1c(%esp),%eax
@@ -75,7 +75,7 @@ End of assembler dump.
 ```
 > `0x8048649: "/bin/sh"`
 
-> L'entrée utilisateur est comparée au nombre 0x149c (5276). En cas d'égalité, ouvre un shell.
+> The user input is compared to the number 0x149c (5276). In case of equality, open a shell.
 
 > So:
 ```

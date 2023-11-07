@@ -32,10 +32,10 @@ int verify_user_name(void)
 
 int main(void)
 {
-        int returned;            // (esp+0x5c) 0x4  -> 0x0
-        char passw_buffer[0x40]; // (esp+0x1c) 0x44 -> 0x4
+        int returned;            // (esp+0x5c) 0x4  -> 0x0 = 0x4 octets
+        char passw_buffer[0x40]; // (esp+0x1c) 0x44 -> 0x4 = 0x40 octets
 
-        for (int i = 0x0; i < 0x40; i++) // DWORD * 0x10
+        for (int i = 0x0; i < 0x40; i++) // DWORD * 0x10 = 0x40
                 passw_buffer[i] = 0x0;
         returned = 0x0;
         puts("********* ADMIN LOGIN PROMPT *********");
@@ -45,7 +45,7 @@ int main(void)
         if (returned != 0x0)
         {
                 puts("nope, incorrect username...\n");
-                return 1;
+                return 0x1;
         }
         puts("Enter Password: ");
         fgets(&passw_buffer, 0x64, stdin); // overflow
@@ -53,10 +53,10 @@ int main(void)
         if (returned == 0x0)
         {
                 puts("nope, incorrect password...\n");
-                return 1;
+                return 0x1;
         }
         if (returned == 0x0) //
-                return 0;    // wtf
+                return 0x0;  // wtf
         puts("nope, incorrect password...\n");
-        return 1; // ok let's buffer overflow
+        return 0x1;
 }
