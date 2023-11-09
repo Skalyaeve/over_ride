@@ -8,7 +8,7 @@
 
 #define CHILD 0x0
 //                            STACK GROW (0xffffffff => 0x00000000)     /\  ARG 1 = ... to 0x08(%ebp)
-int main(void) // ARGS        || 0x04(%ebp) ==> 0x08(%ebp)             //\\ ARG 0 = 0x08(%ebp) to 0x04(%ebp)
+int main(void) // ARGS        || 0x04(%ebp) ==> 0x08(%ebp)             /  \ ARG 0 = 0x08(%ebp) to 0x04(%ebp)
 {              // SAVED EIP   || 0x00(%ebp) ==> 0x04(%ebp)              ||  return address
         //------- EBP (GAP)   || 0xb0(%esp) ==> 0x00(%ebp) = ? bytes    ||  gap
         __pid_t pid;    //--- || 0xac(%esp) ==> 0xb0(%esp) = 4 bytes    ||  local variables
@@ -19,7 +19,7 @@ int main(void) // ARGS        || 0x04(%ebp) ==> 0x08(%ebp)             //\\ ARG 
         char buffer[0x20]; // || 0x20(%esp) ==> 0x40(%esp) = 32 bytes ? ||  C 0Xff
         int wait_status;   // || 0x1c(%esp) ==> 0x20(%esp) = 4 bytes    ||  B 0Xbf ==> 0xbfff2a42...
         //------- ESP (GAP)   || 0x00(%esp) ==> 0x1c(%esp) = 28 bytes   ||  A ==> ABCDEF...
-        // sub 0xb0, esp     \\//                                       ||
+        // sub 0xb0, esp     \  /                                       ||
         //                    \/                                READ/WRITE
         pid = fork();
         for (int i = 0x0; i < 0x20; i++)
