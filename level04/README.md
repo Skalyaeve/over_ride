@@ -107,22 +107,22 @@ End of assembler dump.
    0x0804873f <+119>:   movl   $0x0,(%esp)
    0x08048746 <+126>:   call   0x8048570 <ptrace@plt>
 ```
-> Like so the parent process is now tracing the child process.
+> The parent process is now tracing the child process.
 
 ```
    0x08048757 <+143>:   lea    0x20(%esp),%eax
    0x0804875b <+147>:   mov    %eax,(%esp)
    0x0804875e <+150>:   call   0x80484b0 <gets@plt>
 ```
-> `<gets@plt>` on stdin, store our input at `0x20(%esp)`.
+> `<gets@plt>` prompt stdin, store our input at `0x20(%esp)`.
 
-- So the child process gracefully let us write with no limit on his stack, let's see what the parent process does:
+- So the child process gracefully let us write on his stack, let's see what the parent process does:
 ```
    0x08048769 <+161>:   lea    0x1c(%esp),%eax
    0x0804876d <+165>:   mov    %eax,(%esp)
    0x08048770 <+168>:   call   0x80484f0 <wait@plt>
 ```
-> Wait for the child process to change his state (stopped, calls execve, ...).
+> Wait for the child process to change his state.
 
 ```
    0x08048775 <+173>:   mov    0x1c(%esp),%eax
@@ -172,7 +172,7 @@ End of assembler dump.
 ```
 > `0x8048500: "no exec() for you"`
 
-> If the child process used syscall `execve()`, `puts("no exec() for you")` and `kill(0x9, pid)`.
+> If the child process used syscall `execve()`, `puts("no exec() for you")` and `kill(0x9, pid)`, so, our shellcode should not use execve.
 
 - Let's build our shellcode, be careful with [bad characters](https://www.google.com/search?q=shellcode+bad+characters&sca_esv=580628691&rlz=1C1ONGR_frFR1081FR1081&sxsrf=AM9HkKkygoTr1Zqor0isLzJgYKQ9t8VEvQ%3A1699483861071&ei=1RBMZdiABOqmkdUP5c-qoAw&ved=0ahUKEwiYv9zevrWCAxVqU6QEHeWnCsQQ4dUDCBA&uact=5&oq=shellcode+bad+characters&gs_lp=Egxnd3Mtd2l6LXNlcnAiGHNoZWxsY29kZSBiYWQgY2hhcmFjdGVyczIEECMYJzIIEAAYywEYgAQyBhAAGBYYHjIGEAAYFhgeMgYQABgWGB5IvQRQyANYyANwAHgCkAEAmAE-oAE-qgEBMbgBA8gBAPgBAcICBBAAGEfiAwQYACBBiAYBkAYF&sclient=gws-wiz-serp#ip=1) (0x00, 0x0a, ...):
 ```asm
