@@ -10,7 +10,7 @@
 //                            STACK GROW (0xffffffff => 0x00000000)     /\  ARG 1 = ... to 0x08(%ebp)
 int main(void) // ARGS        || 0x04(%ebp) ==> 0x08(%ebp)             /  \ ARG 0 = 0x08(%ebp) to 0x04(%ebp)
 {              // SAVED EIP   || 0x00(%ebp) ==> 0x04(%ebp)              ||  return address
-        //------- EBP (GAP)   || 0xb0(%esp) ==> 0x00(%ebp) = ? bytes    ||  saved registers / gap
+        //------- EBP (GAP)   || 0xb0(%esp) ==> 0x00(%ebp) = ? bytes    ||  saved registers + gap
         __pid_t pid;    //--- || 0xac(%esp) ==> 0xb0(%esp) = 4 bytes    ||  local variables
         int ptrace_ret; //--- || 0xa8(%esp) ==> 0xac(%esp) = 4 bytes    ||  ...
         int temp_int1;  //--- || 0xa4(%esp) ==> 0xa8(%esp) = 4 bytes    ||  F ...
