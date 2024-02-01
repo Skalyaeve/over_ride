@@ -234,7 +234,7 @@ End of assembler dump.
    0x080488d2 <+120>:   mov    %eax,(%esp)
    0x080488d5 <+123>:   call   0x8048747 <test>
 ```
-- Prompt stdin et call `test` avec l'entrée utilisateur en premier argument et le nombre 0x1337d00d en second argument.
+> Prompt stdin et call `<test>` avec notre entrée en premier argument et le nombre 0x1337d00d en second argument.
 
 ```
    0x0804874d <+6>:     mov    0x8(%ebp),%eax
@@ -251,9 +251,9 @@ End of assembler dump.
    0x0804884f <+264>:   mov    %eax,(%esp)
    0x08048852 <+267>:   call   0x8048660 <decrypt>
 ```
-- Soustrait notre entrée de 0x1337d00d, stocke le résultat dans la pile, si le résultat est supérieur à 0x15, appelle `0x8048660 <decrypt>` avec le retour de `0x8048520 rand@plt` comme premier paramètre.
+> Soustrait notre entrée de 0x1337d00d, stocke le résultat sur la stack, si le résultat est supérieur à 0x15, appelle `0x8048660 <decrypt>` avec le retour de `0x8048520 rand@plt` comme premier paramètre.
 
-- Donc si notre entrée est inférieure à 0x1337d00d - 0x15, appelle `decrypt` avec une valeur aléatoire comme premier paramètre, ce qui n'est pas ce que nous voulons.
+- Donc si notre entrée est inférieure à 0x1337d00d - 0x15, le programme appelle `<decrypt>` avec une valeur aléatoire comme premier paramètre, ce qui n'est pas ce que nous voulons.
 
 - Ensuite, nous voyons le modèle suivant répété 15 fois:
 ```

