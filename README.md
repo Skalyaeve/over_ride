@@ -1,5 +1,5 @@
 # Over Ride
-> *This project is an introduction to the exploitation of (elf-like) binary*
+> *This project is an introduction to the exploitation of (elf-like) binary.*
 
 *As a developer, you might have to work on softwares that will be used by hundreds of people.*
 *You have learned to develop more or less complex programs without taking security into account.*
